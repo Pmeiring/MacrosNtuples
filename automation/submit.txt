@@ -8,6 +8,4 @@ log                     = logs/$(ClusterId).$(ProcId).log
 should_transfer_files = yes
 when_to_transfer_output = on_exit
 
-transfer_input_files    = /afs/cern.ch/user/l/lebeling/MacrosNtuples.tar.gz
-
 queue cmd from queue.txt

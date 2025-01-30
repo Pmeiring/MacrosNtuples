@@ -12,8 +12,7 @@ args = parser.parse_args()
 
 concatenated_cmd = ' '.join(args.cmd)
 concatenated_cmd = concatenated_cmd.replace("___", " ")
-#concatenated_cmd = 'tar -xzf MacrosNtuples.tar.gz; cd MacrosNtuples/l1macros; ' + concatenated_cmd
 concatenated_cmd = f'cd {repository}/automation; ' + concatenated_cmd
 
-print('command to be executed: ' + concatenated_cmd)
+print('command executed: ' + concatenated_cmd)
 os.system(concatenated_cmd)
