@@ -18,7 +18,7 @@ for file in cleaned_files:
     filehash = parts[-2]
 
     # group by runnum 
-    target = file.replace(filehash, "merged").replace(dqm_official, dqm_prefix)
+    target = file.replace(filehash, "merged")
     if target not in file_groups:
         file_groups[target] = []
     file_groups[target].append(file)
