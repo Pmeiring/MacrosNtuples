@@ -33,8 +33,8 @@ def write_queue(script, infile = "", outdir = ""):
 
 
 # return weeks as dict with runnum as key -> weeks[runx] = 42
-def get_weeks():
-    oms_path = "/eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024/physics.root"
+def get_weeks(year=2024):
+    oms_path = f"/eos/cms/store/group/tsg/STEAM/OMSRateNtuple/{year}/physics.root"
     with uproot.open(oms_path) as f:
         df = f["tree"].arrays(
             filter_name = ['run', 'year', 'month', 'day'],
