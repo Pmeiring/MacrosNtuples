@@ -8,6 +8,7 @@ htcondor = htcondor_flag()
 
 # collect all base histogram root files
 all_files = glob(f"{dqm_prefix}/*/*/*/*/*/*/*.root")
+all_files = [f for f in all_files if 'merged' not in f]
 cleaned_files = clean(all_files)
 
 # group files by runnum, by era, and by year
