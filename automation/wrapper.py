@@ -3,7 +3,7 @@
 import argparse
 import os
 
-repository = '/afs/cern.ch/user/l/lebeling/MacrosNtuples'
+automation_path = os.path.dirname(os.path.abspath(__file__))
 
 # parse commands to be executed as arguments
 parser = argparse.ArgumentParser(description="wrapper running script on htcondor")
@@ -12,7 +12,7 @@ args = parser.parse_args()
 
 concatenated_cmd = ' '.join(args.cmd)
 concatenated_cmd = concatenated_cmd.replace("___", " ")
-concatenated_cmd = f'cd {repository}/automation; ' + concatenated_cmd
+concatenated_cmd = f'cd {automation_path}; ' + concatenated_cmd
 
 print('command executed: ' + concatenated_cmd)
 os.system(concatenated_cmd)
