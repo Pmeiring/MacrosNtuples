@@ -1,41 +1,41 @@
 #!/bin/python3
-
-import os, yaml
+import yaml, os
 from glob import glob
-from utils import write_queue, parse_file, run_command, htcondor_flag, tier0, dqm_prefix
+from utils import htcondor_flag, parse_file, run_command, write_queue, tier0, dqm_prefix
 
-config_dict = yaml.safe_load(open('config.yaml', 'r'))
+config_file = yaml.safe_load(open('config.yaml', 'r'))
 
 htcondor = htcondor_flag()
 
-# main logic: glob files on tier 0 and run plotting scripts
-for label, config in config_dict.items():
-    print(20*"#" + f" Running plots for {label} " + 20*"#")
 
-    # step 1 - find all files on tier 0
-    fnames = []
-    for dataset in config["datasets"]:
-        for era in config["eras"]:
-            fnames += glob(f"{tier0}/{era}/{dataset}/NANOAOD/PromptReco-v*/*/*/*/*/*.root")
+for label, config in config_file.items():
+    
+    #step 1 - find all files on tier 0
+    fnames = [glob(f"{tier0}/{era}/{dataset}/NANOAOD/PromptReco-v*/*/*/*/*/*.root") 
+              for era in config["eras"] for dataset in config["datasets"]]
+    fnames = [item for sublist in fnames for item in sublist]
 
-    # step 2 - for each file, run scripts
-    # fnames = fnames[:100]
-    for fname in fnames:
-        print(f"Processing file {fname}")
+    #step 2 - remove files that have already been processed
+    for file in fnames:
+        output_path = dqm_prefix + parse_file(file)
+        num_root_files = len(glob(f"{output_path}/*.root"))
+        if num_root_files > 0: fnames.remove(file)
 
-        out_web_path = dqm_prefix + parse_file(fname)
 
-        # abort if histogram root files already exist
-        root_files = glob(f"{out_web_path}/*.root")
-        if len(root_files) > 0:
-            print(f"Skipping {out_web_path} - already processed")
-            continue
+    #step 3 - run scripts
+    #enumerate over all files
+    for i, file in enumerate(fnames):
+        if not htcondor and i == 10: break
 
-        for cmd in config["scripts"]: 
-            cmd = cmd.replace("$OUTDIR", out_web_path)
-            cmd = cmd.replace("$INFILE", fname)
-            
-            os.makedirs(out_web_path, exist_ok=True)
+        print(f"Processing file {file}")
 
-            if htcondor: write_queue(cmd) # write script into htcondor queue file
-            else: run_command(cmd, out_web_path+"/log.txt") # run script on current shell
+        output_path = dqm_prefix + parse_file(file)
+
+        for cmd in config["scripts"]:
+            cmd = cmd.replace("$OUTDIR", output_path)
+            cmd = cmd.replace("$INFILE", file)
+
+            os.makedirs(output_path, exist_ok=True)
+
+            if htcondor: write_queue(cmd)
+            else: run_command(cmd, output_path + "/log.txt")
