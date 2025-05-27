@@ -5,6 +5,12 @@ Tool kit to (semi) automize production of DQM plot from NanoAODs stored on tier 
 - remove all scheduled cron jobs: `acrontab -r`
 - open cron job editior: `acrontab -e`
 
+last acron command:
+```
+0 * * * * lxplus cd /afs/cern.ch/user/l/lebeling/MacrosNtuples/automation && sh cron_job.sh >>cron.log 2>&1
+```
+
+
 Inside the cron jib editior:
 - save changes via ctrl+o
 - close editior via ctrl+x
