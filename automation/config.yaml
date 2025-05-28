@@ -3,7 +3,7 @@ JetMET:
         - 'JetMET0'
         - 'JetMET1'
     eras:
-        - 'Run2024*'
+        - 'Run2025*'
     scripts:
         - 'python3 ../l1macros/performances_nano.py -i $INFILE -o $OUTDIR/all_DiJet.root -c DiJet'  
     plotting:
@@ -13,8 +13,10 @@ EGamma:
     datasets:
         - 'EGamma0'
         - 'EGamma1'
+        - 'EGamma2'
+        - 'EGamma3'
     eras: 
-        - 'Run2024*'
+        - 'Run2025*'
     scripts:
         - 'python3 ../l1macros/performances_nano.py -i $INFILE -o $OUTDIR/all_PhotonJet.root -c PhotonJet'
         - 'python3 ../l1macros/performances_nano.py -i $INFILE -o $OUTDIR/all_ZToEE.root -c ZToEE'
@@ -28,7 +30,7 @@ Muon:
         - 'Muon0'
         - 'Muon1'
     eras:
-        - 'Run2024*'
+        - 'Run2025*'
     scripts:
         - 'python3 ../l1macros/performances_nano.py -i $INFILE -o $OUTDIR/all_ZToMuMu.root -c ZToMuMu'
         - 'python3 ../l1macros/performances_nano.py -i $INFILE -o $OUTDIR/all_MuonJet.root -c MuonJet' #TODO not working

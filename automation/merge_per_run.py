@@ -15,6 +15,10 @@ cleaned_files = clean(all_files)
 file_groups = {}
 for file in cleaned_files:
     parts = file.split('/') 
+    run = int(parts[-3])
+    era = parts[-6]
+    dataset = parts[-7]
+    
     filename = parts[-1]
     filehash = parts[-2]
 
