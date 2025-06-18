@@ -1,18 +1,19 @@
 #!/bin/python3
+print("Wrapper started")
 
 import argparse
 import os
+import sys
 
-automation_path = os.path.dirname(os.path.abspath(__file__))
+automation_path = '/afs/cern.ch/work/p/pmeiring/private/CMS/l1tdpg/autoPlotter/MacrosNtuples/automation'
 
-# parse commands to be executed as arguments
-parser = argparse.ArgumentParser(description="wrapper running script on htcondor")
-parser.add_argument('cmd', nargs='+', type=str, help='commands to be executed')
-args = parser.parse_args()
+# Set up proxy for accessing remote files with xrootd
+os.environ["X509_USER_PROXY"] = sys.argv[1].split(",")[0]
+print(os.environ["X509_USER_PROXY"])
 
-concatenated_cmd = ' '.join(args.cmd)
+# Run command
+concatenated_cmd = sys.argv[1].split(",")[1]
 concatenated_cmd = concatenated_cmd.replace("___", " ")
 concatenated_cmd = f'cd {automation_path}; ' + concatenated_cmd
-
 print('command executed: ' + concatenated_cmd)
 os.system(concatenated_cmd)

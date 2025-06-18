@@ -9,11 +9,24 @@ htcondor = htcondor_flag()
 
 
 for label, config in config_file.items():
-    
+
     #step 1 - find all files on tier 0
-    fnames = [glob(f"{tier0}/{era}/{dataset}/NANOAOD/PromptReco-v*/*/*/*/*/*.root") 
-              for era in config["eras"] for dataset in config["datasets"]]
-    fnames = [item for sublist in fnames for item in sublist]
+    # fnames = [glob(f"{tier0}/{era}/{dataset}/NANOAOD/PromptReco-v*/*/*/*/*/*.root")
+    #           for era in config["eras"] for dataset in config["datasets"]]
+    # fnames = [item for sublist in fnames for item in sublist]
+
+    #step 1 - find all prompt-reco files on DAS
+    fnames=[]
+    for dataset in config["datasets"]:
+        for era in config["eras"]:
+            # Call DAS to obtain file names
+            cmd='bash ../l1macros/getDASfiles.sh %s %s'%(dataset, era)
+            os.system(cmd)
+
+            # Put them in a list
+            with open('files_das.txt', 'r') as file:
+                content = file.read()
+                fnames+=content.split()
 
     #step 2 - remove files that have already been processed
     for file in fnames:

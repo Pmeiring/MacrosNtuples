@@ -1,11 +1,21 @@
 executable              = wrapper.py
-arguments               = $(cmd)
-output                  = logs/$(ClusterId).$(ProcId).out
-error                   = logs/$(ClusterId).$(ProcId).err
-log                     = logs/$(ClusterId).$(ProcId).log
-+JobFlavour             = espresso
+JobBatchName            = autoL1TDQMplotter
+#output                  = logs/$(ClusterId).$(ProcId).out
+#error                   = logs/$(ClusterId).$(ProcId).err
+#log                     = logs/$(ClusterId).$(ProcId).log
+output                  = /dev/null
+error                   = /dev/null
+log                     = /dev/null
+#+JobFlavour             = espresso
++MaxRuntime = 600
+
+getenv     = True
+Proxy_path = /afs/cern.ch/user/p/pmeiring/x509up_u111185
+arguments  = $(Proxy_path),$(cmd)
+
 
 should_transfer_files = yes
 when_to_transfer_output = on_exit
+transfer_input_files = wrapper.py
 
 queue cmd from queue.txt
