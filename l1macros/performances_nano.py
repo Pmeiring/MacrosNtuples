@@ -103,6 +103,8 @@ def main():
     if not 'L1_UnprefireableEvent_FirstBxInTrain' in df.GetColumnNames():
         df = df.Define('L1_UnprefireableEvent_FirstBxInTrain','return false;')
     
+    df = df.Define('Jet_passJetIdTight', '((abs(Jet_eta)<=2.6)&&(Jet_neHEF < 0.99)&&(Jet_neEmEF<0.9)&&(Jet_chMultiplicity+Jet_neMultiplicity>1)&&(Jet_chHEF>0.01)&&(Jet_chMultiplicity>0)) || ((abs(Jet_eta)>2.6&&abs(Jet_eta)<=2.7)&&(Jet_neHEF<0.90)&&(Jet_neEmEF < 0.99)) || ((abs(Jet_eta)>2.7&&abs(Jet_eta)<=3.0)&&(Jet_neHEF < 0.99)) || ((abs(Jet_eta)>3.0)&&(Jet_neMultiplicity>=2)&&(Jet_neEmEF<0.4))')
+    df = df.Define('Jet_passJetIdTightLepVeto', '((abs(Jet_eta)<=2.7)&&Jet_passJetIdTight&&(Jet_muEF<0.8)&&(Jet_chEmEF<0.8)) || ((abs(Jet_eta)>2.7)&&Jet_passJetIdTight)')
 
     print('There are {} events'.format(nEvents))
 
