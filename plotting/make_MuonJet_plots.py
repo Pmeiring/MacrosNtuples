@@ -1,5 +1,5 @@
 eventselection='#mu+jet'
-subfolder='/plotsL1Run3'
+subfolder='/MuonJet'
 channelname='MuonJet'
 
 import yaml

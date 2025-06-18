@@ -1,5 +1,5 @@
 eventselection='#gamma+jet'
-subfolder='/plotsL1Run3'
+subfolder='/PhotonJet'
 channelname='PhotonJet'
 
 import yaml
@@ -752,6 +752,21 @@ def main():
                 top_label = toplabel,
                 axisranges = [320673, 325173, 0, 1.5],
                 plotname = channelname+'_L1Jet_PtBalancevsRun_singlejet',
+                )
+
+            drawplots.makeprof(
+                inputFiles_list = [input_file],
+                saveplot = True,
+                dirname = args.dir + subfolder,
+                nvtx_suffix = s,
+                h2d = ['h_L1PtBalanceVsPhotonPt_singlejet_{}'.format(eta_range) for eta_range in eta_ranges],
+                xtitle = 'p_{T}^{reco #gamma}',
+                ytitle = '(p_{T}^{L1 jet}/p_{T}^{reco #gamma})',
+                extralabel = "#splitline{"+eventselection+", MET<50 GeV}{= 1 clean jet, #Delta#phi(#gamma, jet) > 2.9}",
+                legendlabels = eta_labels,
+                top_label = toplabel,
+                axisranges = [0, 500, 0, 1.5],
+                plotname = channelname+'_L1Jet_PtBalancevsPhotonPt_singlejet',
                 )
 
 if __name__ == '__main__':
