@@ -1,8 +1,10 @@
-import os, subprocess, argparse, uproot
+import os, subprocess, argparse, uproot, re, csv
 import pandas as pd
+from datetime import datetime
+from collections import defaultdict
 
 #dqm_prefix = '/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/cmsl1dpg/www/DQM/T0PromptNanoMonit'
-dqm_prefix = "/eos/user/l/lebeling/www/DQM" 
+dqm_prefix = "/eos/user/p/pmeiring/www/L1Trigger/l1dpg/DQM"
 tier0 = "/eos/cms/tier0/store/data"
 
 
@@ -55,6 +57,76 @@ def get_weeks(year=2024):
         weeks[r] = f'Week{w}_{min_r}-{max_r}'
 
     return weeks
+
+def get_weeks_v2(csv_path="run_weeks.csv"):
+    run_week_dict = {}
+    try:
+        with open(csv_path, newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                try:
+                    run = int(row["RunNumber"])
+                    full_week = row["ISO_Week"]
+                    # Extract just the week number (e.g., '2025-W22' -> '22')
+                    week_only = full_week.split("-W")[1]
+                    run_week_dict[run] = week_only
+                except (ValueError, KeyError, IndexError):
+                    continue  # Skip malformed rows
+    except FileNotFoundError:
+        print(f"File not found: {csv_path}")
+    except Exception as e:
+        print(f"Error reading CSV: {e}")
+
+    return run_week_dict
+
+def generate_weekDict(year=2025):
+    run_week_dict = {}
+    week_run_dict = defaultdict(list)
+
+    for era in os.listdir(tier0):
+        if not era.startswith(f"Run{year}"):
+            continue
+
+        era_path = os.path.join(tier0, era, "L1Accept/RAW/v1/000/")
+        if not os.path.isdir(era_path):
+            continue
+
+        for root, dirs, files in os.walk(era_path):
+            if not root.endswith("/00000"):
+                continue
+
+            match = re.search(r"/(\d{3})/(\d{3})/00000$", root)
+            if not match:
+                continue
+
+            run_number = int(match.group(1) + match.group(2))
+
+            # Get parent directory of "00000", i.e., the run directory
+            run_dir = os.path.dirname(root)
+
+            try:
+                dir_stat = os.stat(run_dir)
+                # Use st_mtime (last modification time) or st_ctime (creation time on some systems)
+                timestamp = dir_stat.st_mtime
+                dt = datetime.fromtimestamp(timestamp)
+                iso_week = dt.strftime("%G-W%V")
+                run_week_dict[run_number] = iso_week
+                week_run_dict[iso_week].append(run_number)
+            except Exception:
+                continue  # Skip if stats can't be read
+
+    with open("run_weeks.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["RunNumber", "ISO_Week"])
+        for run, week in sorted(run_week_dict.items()):
+            writer.writerow([run, week])
+
+    with open("week_runs.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["ISO_Week", "RunNumbers"])
+        for week, runs in sorted(week_run_dict.items()):
+            run_list_str = " ".join(str(r) for r in sorted(runs))
+            writer.writerow([week, run_list_str])
 
 
 def hadd(target, files, htcondor = False):

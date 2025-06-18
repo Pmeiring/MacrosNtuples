@@ -1,14 +1,15 @@
 #!/bin/python3
 
 from glob import glob
-from utils import hadd, get_weeks, htcondor_flag, dqm_prefix
+from utils import hadd, get_weeks, get_weeks_v2, htcondor_flag, dqm_prefix
 
 htcondor = htcondor_flag()
 
 # collect all histogram root files merged by run
 all_files = glob(f"{dqm_prefix}/*/*/*/*/*/merged/*.root") #change later to dqm_prefix 
 
-weeks = get_weeks()
+# weeks = get_weeks()
+weeks = get_weeks_v2()
 
 # group files by week and era
 file_groups = {}
@@ -32,7 +33,6 @@ for file in all_files:
     if target not in file_groups:
         file_groups[target] = []
     file_groups[target].append(file)
-
 
 # Hadd grouped files
 for target, files in file_groups.items():
