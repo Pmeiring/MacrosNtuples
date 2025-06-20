@@ -1,6 +1,6 @@
 # make_mu_plots.py, a program to draw the L1Studies plots obtained from the histograms extracted from NanoAOD
 eventselection='Z#rightarrow #mu#mu'
-subfolder='/plotsL1Run3'
+subfolder='/plots_ztomumu'
 channelname='ZToMuMu'
 
 import yaml

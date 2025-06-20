@@ -1,5 +1,5 @@
 eventselection='#mu+#tau_{h}'
-subfolder='/plotsL1Run3'
+subfolder='/plots_ztotautau'
 channelname='ZToTauTau'
 
 import yaml

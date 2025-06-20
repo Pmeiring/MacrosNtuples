@@ -1,6 +1,6 @@
 # make_ZToEE_plots.py, a program to draw the L1Studies plots obtained from the histograms extracted from NanoAOD
 eventselection='Z#rightarrow ee'
-subfolder='/plotsL1Run3'
+subfolder='/plots_ztoee'
 channelname='ZToEE'
 
 import yaml

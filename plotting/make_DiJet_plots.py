@@ -1,5 +1,5 @@
 eventselection='dijet'
-subfolder='/plotsL1Run3'
+subfolder='/plots_dijet'
 channelname='DiJet'
 
 import yaml

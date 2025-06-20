@@ -1,5 +1,5 @@
 eventselection='#gamma+jet'
-subfolder='/plotsL1Run3'
+subfolder='/plots_photonjet'
 channelname='PhotonJet'
 
 import yaml
