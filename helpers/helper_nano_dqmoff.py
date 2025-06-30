@@ -199,7 +199,7 @@ def DQMOff_JetSelection(df):
     #df = df.Define('isGoodJet', 'Jet_jetId>=4')
     #df = df.Filter('Sum(isGoodJet)>0')
     df = df.Filter('Sum(passPFJetID)>0')
-    df = df.Define('isLead', 'isLeadJet(Jet_pt, isGoodJet)')
+    df = df.Define('isLead', 'isLeadJet(Jet_pt, passPFJetID)')
 
     df = df.Define('leadJetPt', 'Jet_pt[isLead]')
     df = df.Define('leadJetEta','Jet_eta[isLead]')
