@@ -46,6 +46,58 @@ def main():
             dirname = args.dir + subfolder,
             )
 
+    drawplots.makedist(
+            inputFiles_list = [input_file],
+            saveplot = True,
+            setlogy=True,
+            h1d = ['h_njet35'],
+            xtitle = 'N_{jets}',
+            ytitle = 'Events',
+            axisranges=[0,10],
+            top_label = toplabel,
+            plotname = channelname+'_njet35',
+            dirname = args.dir + subfolder,
+            )
+
+    drawplots.makedist(
+            inputFiles_list = [input_file],
+            saveplot = True,
+            setlogy=True,
+            h1d = ['h_njet35_matched'],
+            xtitle = 'N_{jets}',
+            ytitle = 'Events',
+            axisranges=[0,10],
+            top_label = toplabel,
+            plotname = channelname+'_njet35_matched',
+            dirname = args.dir + subfolder,
+            )
+
+    drawplots.makedist(
+            inputFiles_list = [input_file],
+            saveplot = True,
+            setlogy=True,
+            h1d = ['h_njet110'],
+            xtitle = 'N_{jets}',
+            ytitle = 'Events',
+            axisranges=[0,10],
+            top_label = toplabel,
+            plotname = channelname+'_njet110',
+            dirname = args.dir + subfolder,
+            )
+
+    drawplots.makedist(
+            inputFiles_list = [input_file],
+            saveplot = True,
+            setlogy=True,
+            h1d = ['h_njet110_matched'],
+            xtitle = 'N_{jets}',
+            ytitle = 'Events',
+            axisranges=[0,10],
+            top_label = toplabel,
+            plotname = channelname+'_njet110_matched',
+            dirname = args.dir + subfolder,
+            )
+
     for s in suffixes:
 
         if config['TurnOns']:
@@ -450,6 +502,86 @@ def main():
                 axisranges = [0, 200, 0.6, 1.5], 
                 )
 
+            drawplots.makeresol(
+                inputFiles_list = [input_file],
+                saveplot = True,
+                dirname = args.dir + subfolder,
+                nvtx_suffix = s,
+                h2d = ['h_ResponseVsPt_L1t35Off35_big_bins_Jet_plots_{}'.format(eta_range) for eta_range in eta_ranges],
+                xtitle = 'p_{T}^{reco jet} (GeV)',
+                ytitle = '(p_{T}^{L1 jet}/p_{T}^{reco jet})',
+                #extralabel = '#splitline{Z#rightarrowee}{Non Iso.}',
+                legend_pos = 'top',
+                legendlabels = eta_labels,
+                top_label = toplabel,
+                plotname = channelname+'_L1Jet_ResponseVsPt_L1t35Off35',
+                axisranges = [0, 200, 0.6, 1.5], 
+                )
+
+            drawplots.makeresol(
+                inputFiles_list = [input_file],
+                saveplot = True,
+                dirname = args.dir + subfolder,
+                nvtx_suffix = s,
+                h2d = ['h_ResponseVsPt_L1t35_big_bins_Jet_plots_{}'.format(eta_range) for eta_range in eta_ranges],
+                xtitle = 'p_{T}^{reco jet} (GeV)',
+                ytitle = '(p_{T}^{L1 jet}/p_{T}^{reco jet})',
+                #extralabel = '#splitline{Z#rightarrowee}{Non Iso.}',
+                legend_pos = 'top',
+                legendlabels = eta_labels,
+                top_label = toplabel,
+                plotname = channelname+'_L1Jet_ResponseVsPt_L1t35',
+                axisranges = [0, 200, 0.6, 1.5], 
+                )
+
+            drawplots.makeresol(
+                inputFiles_list = [input_file],
+                saveplot = True,
+                dirname = args.dir + subfolder,
+                nvtx_suffix = s,
+                h2d = ['h_ResponseVsPt_L1t110Off110_big_bins_Jet_plots_{}'.format(eta_range) for eta_range in eta_ranges],
+                xtitle = 'p_{T}^{reco jet} (GeV)',
+                ytitle = '(p_{T}^{L1 jet}/p_{T}^{reco jet})',
+                #extralabel = '#splitline{Z#rightarrowee}{Non Iso.}',
+                legend_pos = 'top',
+                legendlabels = eta_labels,
+                top_label = toplabel,
+                plotname = channelname+'_L1Jet_ResponseVsPt_L1t110Off110',
+                axisranges = [0, 200, 0.6, 1.5], 
+                )
+
+            drawplots.makeresol(
+                inputFiles_list = [input_file],
+                saveplot = True,
+                dirname = args.dir + subfolder,
+                nvtx_suffix = s,
+                h2d = ['h_ResponseVsPt_L1t110_big_bins_Jet_plots_{}'.format(eta_range) for eta_range in eta_ranges],
+                xtitle = 'p_{T}^{reco jet} (GeV)',
+                ytitle = '(p_{T}^{L1 jet}/p_{T}^{reco jet})',
+                #extralabel = '#splitline{Z#rightarrowee}{Non Iso.}',
+                legend_pos = 'top',
+                legendlabels = eta_labels,
+                top_label = toplabel,
+                plotname = channelname+'_L1Jet_ResponseVsPt_L1t110',
+                axisranges = [0, 200, 0.6, 1.5], 
+                )
+
+            # drawplots.makeresol(
+            #     inputFiles_list = [input_file],
+            #     saveplot = True,
+            #     dirname = args.dir + subfolder,
+            #     nvtx_suffix = s,
+            #     h2d = ['h_ResponseVsPt_UncorrJet_plots_{}'.format(eta_range) for eta_range in eta_ranges],
+            #     xtitle = 'p_{T}^{uncorr L1 jet} (GeV)',
+            #     ytitle = '(p_{T}^{L1 jet}/p_{T}^{reco jet})',
+            #     #extralabel = '#splitline{Z#rightarrowee}{Non Iso.}',
+            #     legend_pos = 'top',
+            #     legendlabels = eta_labels,
+            #     top_label = toplabel,
+            #     plotname = channelname+'_UncorrL1Jet_ResponseVsPt',
+            #     axisranges = [0, 200, 0.6, 1.5], 
+            #     )
+
             # Resolution Vs RunNb
             drawplots.makeresol(
                 inputFiles_list = [input_file],
@@ -468,21 +600,21 @@ def main():
                 )
 
             # Zoomed version
-#            drawplots.makeresol(
-#                inputFiles_list = [input_file],
-#                saveplot = True,
-#                dirname = args.dir + subfolder,
-#                nvtx_suffix = s,
-#                h2d = ['h_ResponseVsRunNb_Jet_plots_{}'.format(eta_range) for eta_range in eta_ranges],
-#                xtitle = 'run number',
-#                ytitle = '(p_{T}^{L1 jet}/p_{T}^{reco jet})',
-#                #extralabel = '#splitline{Z#rightarrowee}{Non Iso.}',
-#                legend_pos = 'top',
-#                legendlabels = eta_labels,
-#                top_label = toplabel,
-#                plotname = channelname+'_L1Jet_ResponseVsRunNb_Zoom',
-#                axisranges = [355374, 362760, 0.8, 1.1],
-#                )
+            drawplots.makeresol(
+               inputFiles_list = [input_file],
+               saveplot = True,
+               dirname = args.dir + subfolder,
+               nvtx_suffix = s,
+               h2d = ['h_ResponseVsRunNb_Jet_plots_{}'.format(eta_range) for eta_range in eta_ranges],
+               xtitle = 'run number',
+               ytitle = '(p_{T}^{L1 jet}/p_{T}^{reco jet})',
+               #extralabel = '#splitline{Z#rightarrowee}{Non Iso.}',
+               legend_pos = 'top',
+               legendlabels = eta_labels,
+               top_label = toplabel,
+               plotname = channelname+'_L1Jet_ResponseVsRunNb_Zoom',
+               axisranges = [355374, 362760, 0.8, 1.1],
+               )
 
         # MET plots
 
@@ -503,9 +635,12 @@ def main():
             ###
 
             HLTMET120_kwargs = {
-                'num': ['h_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight', 'h_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_DiJet80_40_Mjj500_central', 'h_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_DiJet80_40_Mjj500_HF', 'h_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_DiJet140_70_Mjj900'],
-                'den': ['h_MetNoMu_Denominator', 'h_MetNoMu_Denominator_DiJet80_40_Mjj500_central', 'h_MetNoMu_Denominator_DiJet80_40_Mjj500_HF', 'h_MetNoMu_Denominator_DiJet140_70_Mjj900'],
-                'legendlabels': ['Inclusive', '2 jets, p_{T}>80/40 GeV, |#eta|<2.5, M(jj)>500', '2 jets, p_{T}>80/40 GeV, |#eta|>3, M(jj)>500', '2 jets, p_{T}>140/70 GeV, M(jj)>900'],
+                # 'num': ['h_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight', 'h_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_DiJet80_40_Mjj500_central', 'h_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_DiJet80_40_Mjj500_HF', 'h_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_DiJet140_70_Mjj900'],
+                # 'den': ['h_MetNoMu_Denominator', 'h_MetNoMu_Denominator_DiJet80_40_Mjj500_central', 'h_MetNoMu_Denominator_DiJet80_40_Mjj500_HF', 'h_MetNoMu_Denominator_DiJet140_70_Mjj900'],
+                'num': ['h_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight'],
+                'den': ['h_MetNoMu_Denominator'],
+                # 'legendlabels': ['Inclusive', '2 jets, p_{T}>80/40 GeV, |#eta|<2.5, M(jj)>500', '2 jets, p_{T}>80/40 GeV, |#eta|>3, M(jj)>500', '2 jets, p_{T}>140/70 GeV, M(jj)>900'],
+                'legendlabels': ['PFMHTNoMu120'],
                 'xtitle': 'PFMET(#mu subtracted) (GeV)',
                 }
 

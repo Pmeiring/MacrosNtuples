@@ -1,15 +1,15 @@
 # Files
 executable = scriptcondor_performances_nano_reemul.sh
-output = /user/lathomas/GITStuff/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).out
-error = /user/lathomas/GITStuff/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).err
-log = /user/lathomas/GITStuff/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).log
+output = /afs/cern.ch/work/p/pmeiring/private/CMS/l1tdpg/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).out
+error = /afs/cern.ch/work/p/pmeiring/private/CMS/l1tdpg/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).err
+log = /afs/cern.ch/work/p/pmeiring/private/CMS/l1tdpg/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).log
 
-transfer_input_files = $(filename)
-arguments            = $(filename)  /user/lathomas/GITStuff/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/output_$(Process).root CHANNEL GOLDENJSON
+#transfer_input_files = $(filename)
+arguments            = $(filename)  /afs/cern.ch/work/p/pmeiring/private/CMS/l1tdpg/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/output_$(Process).root CHANNEL GOLDENJSON
 
 # File transfer behavior
 #should_transfer_files = no
-#when_to_transfer_output = ON_EXIT
+when_to_transfer_output = ON_EXIT
 
 # Resource requests
 #request_cpus   = 4
@@ -21,6 +21,7 @@ request_disk   = 100MB
 #+maxMemory = 4000      # Request 4GB of RAM
 #+maxWallTime = 120     # Request 2 hrs of wall clock time
 #+remote_queue = "osg"  # Request the OSG queue
++MaxRuntime = 1800
 
 # Run job
 queue filename matching files FILENAMES

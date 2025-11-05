@@ -207,6 +207,7 @@ def drawplots(objs, legendlabels, xtitle='', ytitle='', ztitle='',  extralabel='
         
     objs[0].SetTitle(";{};{};{}".format(xtitle,ytitle,ztitle))
     if objs[0].GetDimension () == 1:
+        # objs[0].Scale(1/objs[0].Integral())
         objs[0].Draw()
     else:
         objs[0].Draw("zcol")
@@ -334,6 +335,7 @@ def compute_ResolutionvsX(h2d):
             proj.Fit(f_gaus)
             #if f_gaus.GetParameter(1) >0 and f_gaus.GetParError(2)/f_gaus.GetParameter(1)<0.03:
             if f_gaus.GetParameter(1) >0 and f_gaus.GetParError(2)/f_gaus.GetParameter(1)<0.05:
+            # if f_gaus.GetParameter(1)>0 and f_gaus.GetParError(2)/f_gaus.GetParameter(1)<1:
                 h_responsevsX.SetBinContent(i,f_gaus.GetParameter(1))
                 h_responsevsX.SetBinError(i,f_gaus.GetParError(1))
                 h_resolvsX.SetBinContent(i,f_gaus.GetParameter(2)/f_gaus.GetParameter(1))

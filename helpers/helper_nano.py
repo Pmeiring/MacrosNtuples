@@ -61,7 +61,7 @@ cout << "Photon Pt, Eta, Phi: " << (Photon_pt)[i]<<", "<<(Photon_eta)[i]<<", "<<
 }
 for(unsigned int i = 0;i< (Jet_pt).size();i++ ){
 cout << "jet Pt, Eta, Phi: " << (Jet_pt)[i]<<", "<<(Jet_eta)[i]<<", "<<(Jet_phi)[i]<<endl;
-cout << "jet PassID, muEF, chEmEF, chHEF: " << (_jetPassID)[i]<<", "<<(Jet_muEF)[i]<<", "<<(Jet_chEmEF)[i]<<", "<<  (Jet_chHEF)[i]<<endl;
+cout << "jet passJetIdTight, jet passJetIdTightLepVeto, muEF, chEmEF, chHEF: " << (Jet_passJetIdTight)[i]<<", "<< (Jet_passJetIdTightLepVeto)[i]<<", "<<(Jet_muEF)[i]<<", "<<(Jet_chEmEF)[i]<<", "<<  (Jet_chHEF)[i]<<endl;
 }
 
 for(unsigned int i = 0;i< (L1EG_pt).size();i++ ){
@@ -131,7 +131,7 @@ cout << "Photon Pt, Eta, Phi: " << (Photon_pt)[i]<<", "<<(Photon_eta)[i]<<", "<<
 }
 for(unsigned int i = 0;i< (Jet_pt).size();i++ ){
 cout << "jet Pt, Eta, Phi: " << (Jet_pt)[i]<<", "<<(Jet_eta)[i]<<", "<<(Jet_phi)[i]<<endl;
-cout << "jet PassID, muEF, chEmEF, chHEF, neHEF: " << (_jetPassID)[i]<<", "<<(Jet_muEF)[i]<<", "<<(Jet_chEmEF)[i]<<", "<<  (Jet_chHEF)[i]<<", "<<  (Jet_neHEF)[i]<<endl;
+cout << "jet passJetIdTight, jet passJetIdTightLepVeto, muEF, chEmEF, chHEF, neHEF: " << (Jet_passJetIdTight)[i]<<", "<< (Jet_passJetIdTightLepVeto)[i]<<", "<<(Jet_muEF)[i]<<", "<<(Jet_chEmEF)[i]<<", "<<  (Jet_chHEF)[i]<<", "<<  (Jet_neHEF)[i]<<endl;
 cout << "jethfsigmaEtaEta jethfsigmaPhiPhi jethfcentralEtaStripSize "<< (Jet_hfsigmaEtaEta)[i]<<", "<<  (Jet_hfsigmaPhiPhi)[i]<<", "<<(Jet_hfcentralEtaStripSize)[i]<<endl;
 }
 
@@ -337,7 +337,7 @@ def ZMuMu_MuSelection(df, massmin, massmax):
     df = df.Define('Muon_trig_idx', 'MatchObjToTrig(Muon_eta, Muon_phi, TrigObj_pt, TrigObj_eta, TrigObj_phi, TrigObj_id, 13, TrigObj_filterBits, 3, 0.2, 24)')
 
     df = df.Define('Muon_passHLT_IsoMu24', 'trig_is_filterbit1_set(Muon_trig_idx, TrigObj_filterBits)')
-    df = df.Define('Muon_PassTightId','Muon_pfIsoId>=3&&Muon_mediumPromptId') 
+    # df = df.Define('Muon_PassTightId','Muon_pfIsoId>=3&&Muon_mediumPromptId') 
 
     df = df.Define('isTag','Muon_pt>25&&abs(Muon_pdgId)==13&&Muon_PassTightId&&Muon_passHLT_IsoMu24')
 
@@ -385,7 +385,7 @@ def DiJetSelection(df):
     '''
 
     df = df.Filter('HLT_AK8PFJet500&&PuppiMET_pt<300')
-    df = df.Define('isHighPtJet','Jet_jetId>=6&&Jet_pt>500&&Jet_muEF<0.5&&Jet_chEmEF<0.5&&Jet_neEmEF<0.8')
+    df = df.Define('isHighPtJet','Jet_passJetIdTight&&Jet_passJetIdTightLepVeto&&Jet_pt>500&&Jet_muEF<0.5&&Jet_chEmEF<0.5&&Jet_neEmEF<0.8')
     
     df = df.Filter('Sum(isHighPtJet)==2','=2 jets with pt>500 GeV')
     df = df.Filter('isHighPtJet[0]&&isHighPtJet[1]','First 2 jets are the cleaned jets')
@@ -508,6 +508,32 @@ def makehistosforturnons_inprobeetaranges(df, histos, etavarname, phivarname, pt
             histos[prefix+str_bineta+'_ResponseVsPt'+suffix] = df_etarange.Histo2D(ROOT.RDF.TH2DModel('h_ResponseVsPt_{}_{}'.format(prefix, str_bineta)+suffix, '', 200, 0, 200, 100, 0, 2), 'denominator_pt', 'response')
             histos[prefix+str_bineta+'_ResponseVsPt_big_bins'+suffix] = df_etarange.Histo2D(ROOT.RDF.TH2DModel('h_ResponseVsPt_big_bins_{}_{}'.format(prefix, str_bineta)+suffix, '', 20, 0, 200, 100, 0, 2), 'denominator_pt', 'response')
             histos[prefix+str_bineta+'_ResponseVsRunNb'+suffix] = df_etarange.Histo2D(ROOT.RDF.TH2DModel('h_ResponseVsRunNb_{}_{}'.format(prefix, str_bineta)+suffix, '', len(runnb_bins)-1, runnb_bins, len(response_bins)-1, response_bins), 'runnb', 'response')
+
+            df_etarange_pt3535 = df_etarange.Define('inEtaRangePT3535', '{}>={}'.format(ptvarname, 35)+'&&{}>={}'.format(l1varname, 35)+'&&abs({})>={}'.format(etavarname, region[0])+'&&abs({})<{}'.format(etavarname, region[1]))
+            df_etarange_pt3535 = df_etarange_pt3535.Define('denominator_pt3535_pt',ptvarname+'[inEtaRangePT3535]')
+            df_etarange_pt3535 = df_etarange_pt3535.Define('response_pt3535',responsevarname+'[inEtaRangePT3535]')
+            histos[prefix+str_bineta+'_ResponseVsPt_L1t35Off35'+suffix] = df_etarange_pt3535.Histo2D(ROOT.RDF.TH2DModel('h_ResponseVsPt_L1t35Off35_{}_{}'.format(prefix, str_bineta)+suffix, '', 200, 0, 200, 100, 0, 2), 'denominator_pt3535_pt', 'response_pt3535')
+            histos[prefix+str_bineta+'_ResponseVsPt_L1t35Off35_big_bins'+suffix] = df_etarange_pt3535.Histo2D(ROOT.RDF.TH2DModel('h_ResponseVsPt_L1t35Off35_big_bins_{}_{}'.format(prefix, str_bineta)+suffix, '', 20, 0, 200, 100, 0, 2), 'denominator_pt3535_pt', 'response_pt3535')
+
+            df_etarange_pt35 = df_etarange.Define('inEtaRangePT35', '{}>={}'.format(l1varname, 35)+'&&abs({})>={}'.format(etavarname, region[0])+'&&abs({})<{}'.format(etavarname, region[1]))
+            df_etarange_pt35 = df_etarange_pt35.Define('denominator_pt35_pt',ptvarname+'[inEtaRangePT35]')
+            df_etarange_pt35 = df_etarange_pt35.Define('response_pt35',responsevarname+'[inEtaRangePT35]')
+            histos[prefix+str_bineta+'_ResponseVsPt_L1t35'+suffix] = df_etarange_pt35.Histo2D(ROOT.RDF.TH2DModel('h_ResponseVsPt_L1t35_{}_{}'.format(prefix, str_bineta)+suffix, '', 200, 0, 200, 100, 0, 2), 'denominator_pt35_pt', 'response_pt35')
+            histos[prefix+str_bineta+'_ResponseVsPt_L1t35_big_bins'+suffix] = df_etarange_pt35.Histo2D(ROOT.RDF.TH2DModel('h_ResponseVsPt_L1t35_big_bins_{}_{}'.format(prefix, str_bineta)+suffix, '', 20, 0, 200, 100, 0, 2), 'denominator_pt35_pt', 'response_pt35')
+
+            df_etarange_pt110110 = df_etarange.Define('inEtaRangePT110110', '{}>={}'.format(ptvarname, 110)+'&&{}>={}'.format(l1varname, 110)+'&&abs({})>={}'.format(etavarname, region[0])+'&&abs({})<{}'.format(etavarname, region[1]))
+            df_etarange_pt110110 = df_etarange_pt110110.Define('denominator_pt110110_pt',ptvarname+'[inEtaRangePT110110]')
+            df_etarange_pt110110 = df_etarange_pt110110.Define('response_pt110110',responsevarname+'[inEtaRangePT110110]')
+            histos[prefix+str_bineta+'_ResponseVsPt_L1t110Off110'+suffix] = df_etarange_pt110110.Histo2D(ROOT.RDF.TH2DModel('h_ResponseVsPt_L1t110Off110_{}_{}'.format(prefix, str_bineta)+suffix, '', 200, 0, 200, 100, 0, 2), 'denominator_pt110110_pt', 'response_pt110110')
+            histos[prefix+str_bineta+'_ResponseVsPt_L1t110Off110_big_bins'+suffix] = df_etarange_pt110110.Histo2D(ROOT.RDF.TH2DModel('h_ResponseVsPt_L1t110Off110_big_bins_{}_{}'.format(prefix, str_bineta)+suffix, '', 20, 0, 200, 100, 0, 2), 'denominator_pt110110_pt', 'response_pt110110')
+
+            df_etarange_pt110 = df_etarange.Define('inEtaRangePT110', '{}>={}'.format(l1varname, 110)+'&&abs({})>={}'.format(etavarname, region[0])+'&&abs({})<{}'.format(etavarname, region[1]))
+            df_etarange_pt110 = df_etarange_pt110.Define('denominator_pt110_pt',ptvarname+'[inEtaRangePT110]')
+            df_etarange_pt110 = df_etarange_pt110.Define('response_pt110',responsevarname+'[inEtaRangePT110]')
+            histos[prefix+str_bineta+'_ResponseVsPt_L1t110'+suffix] = df_etarange_pt110.Histo2D(ROOT.RDF.TH2DModel('h_ResponseVsPt_L1t110_{}_{}'.format(prefix, str_bineta)+suffix, '', 200, 0, 200, 100, 0, 2), 'denominator_pt110_pt', 'response_pt110')
+            histos[prefix+str_bineta+'_ResponseVsPt_L1t110_big_bins'+suffix] = df_etarange_pt110.Histo2D(ROOT.RDF.TH2DModel('h_ResponseVsPt_L1t110_big_bins_{}_{}'.format(prefix, str_bineta)+suffix, '', 20, 0, 200, 100, 0, 2), 'denominator_pt110_pt', 'response_pt110')
+
+
 
         #if i ==1 and prefix == 'EGNonIso_plots':
         #    df_etarange = df_etarange.Filter(stringToPrint)
@@ -808,8 +834,10 @@ def L1ETMHF(df):
 
 def CleanJets(df):
     #List of cleaned jets (noise cleaning + lepton/photon overlap removal)
-    df = df.Define('_jetPassID', 'Jet_jetId>=4')
-    df = df.Define('isCleanJet','_jetPassID&&Jet_pt>30&&Jet_muEF<0.5&&Jet_chEmEF<0.5')
+
+    # df = df.Define('_jetPassID', 'Jet_jetId>=4')
+    # df = df.Define('isCleanJet','_jetPassID&&Jet_pt>30&&Jet_muEF<0.5&&Jet_chEmEF<0.5')
+    df = df.Define('isCleanJet','Jet_passJetIdTight&&Jet_passJetIdTightLepVeto&&Jet_pt>30&&Jet_muEF<0.5&&Jet_chEmEF<0.5')
     df = df.Define('cleanJet_Pt','Jet_pt[isCleanJet]')
     df = df.Define('cleanJet_Eta','Jet_eta[isCleanJet]')
     df = df.Define('cleanJet_Phi','Jet_phi[isCleanJet]')
@@ -987,8 +1015,8 @@ def EtSum(df, suffix = ''):
 
 
     # VBF (Met + jet) trigger
-    if max(runnb_bins) <= 370790 : 
-        histos['HLT_DiJet110_35_Mjj650_PFMET110_DiJet140_70_Mjj900'+suffix] =  df.Filter('HLT_DiJet110_35_Mjj650_PFMET110&&vbf_selection').Histo1D(ROOT.RDF.TH1DModel('h_HLT_DiJet110_35_Mjj650_PFMET110_DiJet140_70_Mjj900'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
+    # if max(runnb_bins) <= 370790 : 
+    #     histos['HLT_DiJet110_35_Mjj650_PFMET110_DiJet140_70_Mjj900'+suffix] =  df.Filter('HLT_DiJet110_35_Mjj650_PFMET110&&vbf_selection').Histo1D(ROOT.RDF.TH1DModel('h_HLT_DiJet110_35_Mjj650_PFMET110_DiJet140_70_Mjj900'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
 
     # VBF trigger
     if max(runnb_bins) > 367661 and max(runnb_bins) <=370790  :
@@ -1019,7 +1047,7 @@ def AnalyzeCleanJets(df, JetRecoPtCut, L1JetPtCut, suffix = ''):
     df = df.Define('cleanJet_L1Pt','GetVal(cleanJet_idxL1jetbx0,L1Jet_pt)')
     df = df.Define('cleanJet_L1Ptbxmin1','GetVal(cleanJet_idxL1jetbxmin1,L1Jet_pt)')
     df = df.Define('cleanJet_L1Ptbx1','GetVal(cleanJet_idxL1jetbx1,L1Jet_pt)')
-    
+    # df = df.Define('cleanJet_L1PtUncorr','GetVal(cleanJet_idxL1jetbx0,L1Jet_rawEt-L1Jet_puEt)')
     df = df.Define('cleanJet_L1PtoverRecoPt','cleanJet_L1Pt/cleanJet_Pt')
 
     df = df.Define('cleanJet_idxL1egbx0', 'FindL1ObjIdx_setBx(L1EG_eta, L1EG_phi, L1EG_bx, cleanJet_Eta, cleanJet_Phi, 0)')
@@ -1035,12 +1063,26 @@ def AnalyzeCleanJets(df, JetRecoPtCut, L1JetPtCut, suffix = ''):
     df = df.Define('cleanHighPtJet_Eta_PassL1Jet','cleanJet_Eta[cleanJet_L1Pt>={}&&cleanJet_Pt>{}]'.format(L1JetPtCut, JetRecoPtCut))
     df = df.Define('cleanHighPtJet_Phi_PassL1Jet','cleanJet_Phi[cleanJet_L1Pt>={}&&cleanJet_Pt>{}]'.format(L1JetPtCut, JetRecoPtCut))
 
+    df = df.Define('L1Jet_idxPuppiJetbx0', 'FindL1ObjIdx_setBx(cleanJet_Eta, cleanJet_Phi, L1Jet_bx, L1Jet_eta, L1Jet_phi, 0)')
+    df = df.Define('cleanJet_Pt_matched','GetVal(L1Jet_idxPuppiJetbx0,cleanJet_Pt)')
+    df = df.Define('nL1Jet35','Sum(L1Jet_pt>35 && abs(L1Jet_eta)>2.65 && abs(L1Jet_eta)<3.0)')
+    df = df.Define('nL1Jet35_matched','Sum(L1Jet_pt>35 && cleanJet_Pt_matched>35 && abs(L1Jet_eta)>2.65 && abs(L1Jet_eta)<3.0)')
+    df = df.Define('nL1Jet110','Sum(L1Jet_pt>110 && abs(L1Jet_eta)>2.65 && abs(L1Jet_eta)<3.0)')
+    df = df.Define('nL1Jet110_matched','Sum(L1Jet_pt>110 && cleanJet_Pt_matched>110 && abs(L1Jet_eta)>2.65 && abs(L1Jet_eta)<3.0)')
+
+    histos['h_njet35']=df.Histo1D(ROOT.RDF.TH1DModel("h_njet35" , "Number of L1Jets with p_T>35 GeV;N_{jets};Events"  ,  20, 0., 20.), "nL1Jet35")
+    histos['h_njet110']=df.Histo1D(ROOT.RDF.TH1DModel("h_njet110" , "Number of L1Jets with p_T>110 GeV;N_{jets};Events"  ,  20, 0., 20.), "nL1Jet110")
+    histos['h_njet35_matched']=df.Histo1D(ROOT.RDF.TH1DModel("h_njet35_matched" , "Number of matched L1Jets with p_T>35 GeV;N_{jets};Events"  ,  20, 0., 20.), "nL1Jet35_matched")
+    histos['h_njet110_matched']=df.Histo1D(ROOT.RDF.TH1DModel("h_njet110_matched" , "Number of matched L1Jets with p_T>110 GeV;N_{jets};Events"  ,  20, 0., 20.), "nL1Jet110_matched")
+
+
     #df = df.Filter(stringFailingJets)
     #Now some plotting (turn ons for now)
     L1PtCuts = [30., 40., 60., 80., 100., 120., 140., 160., 170., 180., 200.]
 
 
-    df = makehistosforturnons_inprobeetaranges(df, histos, etavarname='cleanJet_Eta', phivarname='cleanJet_Phi', ptvarname='cleanJet_Pt', responsevarname='cleanJet_L1PtoverRecoPt', l1varname='cleanJet_L1Pt', l1thresholds=config['Thresholds'], prefix="Jet_plots", binning=jetmetpt_bins, l1thresholdforeffvsrunnb = L1JetPtCut, offlinethresholdforeffvsrunnb = JetRecoPtCut, suffix = suffix) 
+    df = makehistosforturnons_inprobeetaranges(df, histos, etavarname='cleanJet_Eta', phivarname='cleanJet_Phi', ptvarname='cleanJet_Pt',         responsevarname='cleanJet_L1PtoverRecoPt', l1varname='cleanJet_L1Pt', l1thresholds=config['Thresholds'], prefix="Jet_plots",       binning=jetmetpt_bins, l1thresholdforeffvsrunnb = L1JetPtCut, offlinethresholdforeffvsrunnb = JetRecoPtCut, suffix = suffix) 
+    # df = makehistosforturnons_inprobeetaranges(df, histos, etavarname='cleanJet_Eta', phivarname='cleanJet_Phi', ptvarname='cleanJet_L1PtUncorr', responsevarname='cleanJet_L1PtoverRecoPt', l1varname='cleanJet_L1Pt', l1thresholds=config['Thresholds'], prefix="UncorrJet_plots", binning=jetmetpt_bins, l1thresholdforeffvsrunnb = L1JetPtCut, offlinethresholdforeffvsrunnb = JetRecoPtCut, suffix = suffix) 
     
     if config['Efficiency']:
         

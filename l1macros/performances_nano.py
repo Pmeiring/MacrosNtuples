@@ -150,11 +150,18 @@ def main():
         df=df.Redefine('L1Jet_phi','L1EmulJet_phi')
         df=df.Redefine('L1Jet_bx','L1EmulJet_bx')
         df=df.Redefine('L1Jet_hwIso','L1EmulJet_hwIso')
+        df=df.Redefine('L1Jet_rawEt','L1EmulJet_rawEt')
+        df=df.Redefine('L1Jet_puEt','L1EmulJet_puEt')
 
         df=df.Redefine('L1EtSum_pt','L1EmulEtSum_pt')
         df=df.Redefine('L1EtSum_phi','L1EmulEtSum_phi')
         df=df.Redefine('L1EtSum_bx','L1EmulEtSum_bx')
         df=df.Redefine('L1EtSum_etSumType','L1EmulEtSum_etSumType')
+
+    df = df.Define('Jet_passJetIdTight', '((abs(Jet_eta)<=2.6)&&(Jet_neHEF < 0.99)&&(Jet_neEmEF<0.9)&&(Jet_chMultiplicity+Jet_neMultiplicity>1)&&(Jet_chHEF>0.01)&&(Jet_chMultiplicity>0)) || ((abs(Jet_eta)>2.6&&abs(Jet_eta)<=2.7)&&(Jet_neHEF<0.90)&&(Jet_neEmEF < 0.99)) || ((abs(Jet_eta)>2.7&&abs(Jet_eta)<=3.0)&&(Jet_neHEF < 0.99)) || ((abs(Jet_eta)>3.0)&&(Jet_neMultiplicity>=2)&&(Jet_neEmEF<0.4))')
+    df = df.Define('Jet_passJetIdTightLepVeto', '((abs(Jet_eta)<=2.7)&&Jet_passJetIdTight&&(Jet_muEF<0.8)&&(Jet_chEmEF<0.8)) || ((abs(Jet_eta)>2.7)&&Jet_passJetIdTight)')
+
+
 
 
 
@@ -194,7 +201,6 @@ def main():
 
     # add nvtx histo
     nvtx_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_nvtx" , "Number of reco vertices;N_{vtx};Events"  ,    100, 0., 100.), "PV_npvs")
-
         
     if args.channel == 'PhotonJet':
         df = h.SinglePhotonSelection(df) 
@@ -268,7 +274,8 @@ def main():
         
     if args.channel == 'MuonJet':
         df = h.MuonJet_MuonSelection(df) 
-        
+        # df = h.ZMuMu_MuSelection(df, 60, 10000)
+
         df = h.CleanJets(df)
         
         # make copies of df for each bin of nvtx (+1 copy of the original)
@@ -438,6 +445,9 @@ def main():
 
 
     nvtx_histo.GetValue().Write()
+
+    # njet35_histo.GetValue().Write()
+    # njet110_histo.GetValue().Write()
 
 if __name__ == '__main__':
     main()
