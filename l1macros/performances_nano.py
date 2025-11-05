@@ -38,6 +38,7 @@ def main():
                         ''', 
                         type=str, default='PhotonJet')
     parser.add_argument("--config", dest="config", help="Yaml configuration file to read. Default: full config for that channel.", type=str, default='')
+    parser.add_argument("--reemul", help="Run on reemulated quantities", action='store_true')
     #parser.add_argument("--plot_nvtx", dest="plot_nvtx", help="Whether to save additional plots in bins of nvtx. Boolean, default = False", type=bool, default=False)
     #parser.add_argument("--nvtx_bins", dest="nvtx_bins", help="Edges of the nvtx bins to use if plotNvtx is set to True. Default=[10, 20, 30, 40, 50, 60]", nargs='+', type=int, default=[10, 20, 30, 40, 50, 60])
     args = parser.parse_args() 
@@ -102,7 +103,40 @@ def main():
         df = df.Define('L1_UnprefireableEvent_TriggerRules','L1_UnprefireableEvent')
     if not 'L1_UnprefireableEvent_FirstBxInTrain' in df.GetColumnNames():
         df = df.Define('L1_UnprefireableEvent_FirstBxInTrain','return false;')
-    
+
+    if args.reemul:
+        df=df.Redefine('L1Mu_pt','L1EmulMu_pt')
+        df=df.Redefine('L1Mu_eta','L1EmulMu_eta')
+        df=df.Redefine('L1Mu_phi','L1EmulMu_phi')
+        df=df.Redefine('L1Mu_bx','L1EmulMu_bx')
+        df=df.Redefine('L1Mu_hwCharge','L1EmulMu_hwCharge')
+        df=df.Redefine('L1Mu_hwQual','L1EmulMu_hwQual')
+        df=df.Redefine('L1Mu_etaAtVtx','L1EmulMu_etaAtVtx')
+        df=df.Redefine('L1Mu_phiAtVtx','L1EmulMu_phiAtVtx')
+
+        df=df.Redefine('L1EG_pt','L1EmulEG_pt')
+        df=df.Redefine('L1EG_eta','L1EmulEG_eta')
+        df=df.Redefine('L1EG_phi','L1EmulEG_phi')
+        df=df.Redefine('L1EG_bx','L1EmulEG_bx')
+        df=df.Redefine('L1EG_hwIso','L1EmulEG_hwIso')
+
+        df=df.Redefine('L1Tau_pt','L1EmulTau_pt')
+        df=df.Redefine('L1Tau_eta','L1EmulTau_eta')
+        df=df.Redefine('L1Tau_phi','L1EmulTau_phi')
+        df=df.Redefine('L1Tau_bx','L1EmulTau_bx')
+        df=df.Redefine('L1Tau_hwIso','L1EmulTau_hwIso')
+
+        df=df.Redefine('L1Jet_pt','L1EmulJet_pt')
+        df=df.Redefine('L1Jet_eta','L1EmulJet_eta')
+        df=df.Redefine('L1Jet_phi','L1EmulJet_phi')
+        df=df.Redefine('L1Jet_bx','L1EmulJet_bx')
+        df=df.Redefine('L1Jet_hwIso','L1EmulJet_hwIso')
+
+        df=df.Redefine('L1EtSum_pt','L1EmulEtSum_pt')
+        df=df.Redefine('L1EtSum_phi','L1EmulEtSum_phi')
+        df=df.Redefine('L1EtSum_bx','L1EmulEtSum_bx')
+        df=df.Redefine('L1EtSum_etSumType','L1EmulEtSum_etSumType')
+
 
     print('There are {} events'.format(nEvents))
 
